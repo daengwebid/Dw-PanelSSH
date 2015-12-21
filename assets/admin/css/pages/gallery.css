@@ -1,0 +1,8 @@
+.page-gallery .widget {
+  margin-bottom: 0;
+}
+.page-gallery .widget,
+.page-gallery .cover,
+.page-gallery .cover-image {
+  height: 100%;
+}

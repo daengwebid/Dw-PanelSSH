@@ -1,0 +1,137 @@
+/*!
+ * remark v1.0.1 (http://getbootstrapadmin.com/remark)
+ * Copyright 2015 amazingsurge
+ * Licensed under the Themeforest Standard Licenses
+ */
+(function(window, document, $) {
+  'use strict';
+
+  $.site.menu = {
+    speed: 250,
+    accordion: true, // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+
+    init: function() {
+      this.$instance = $('.site-menu');
+
+      this.bind();
+    },
+
+    bind: function() {
+      var self = this;
+
+      this.$instance.on('mouseenter.site.menu', '.site-menu-item', function() {
+        if ($.site.menubar.folded === true && $(this).is('.has-sub')) {
+          var $sub = $(this).children('.site-menu-sub');
+          self.position($(this), $sub);
+        }
+
+        $(this).addClass('hover');
+      }).on('mouseleave.site.menu', '.site-menu-item', function() {
+        $(this).removeClass('hover');
+      }).on('deactive.site.menu', '.site-menu-item.active', function(e) {
+        var $item = $(this);
+
+        $item.removeClass('active');
+
+        e.stopPropagation();
+      }).on('active.site.menu', '.site-menu-item', function(e) {
+        var $item = $(this);
+
+        $item.addClass('active');
+
+        e.stopPropagation();
+      }).on('open.site.menu', '.site-menu-item', function(e) {
+        var $item = $(this);
+
+        self.expand($item, function() {
+          $item.addClass('open');
+        });
+
+        if (self.accordion) {
+          $item.siblings('.open').trigger('close.site.menu');
+        }
+
+        e.stopPropagation();
+      }).on('close.site.menu', '.site-menu-item.open', function(e) {
+        var $item = $(this);
+
+        self.collapse($item, function() {
+          $item.removeClass('open');
+        });
+
+        e.stopPropagation();
+      }).on('click.site.menu', '.site-menu-item', function(e) {
+        if ($(this).is('.has-sub')) {
+          e.preventDefault();
+
+          if ($(this).is('.open')) {
+            $(this).trigger('close.site.menu');
+          } else {
+            $(this).trigger('open.site.menu');
+          }
+        } else {
+          if (!$(this).is('.active')) {
+            $(this).siblings('.active').trigger('deactive.site.menu');
+            $(this).trigger('active.site.menu');
+          }
+        }
+
+        e.stopPropagation();
+      });
+    },
+
+    collapse: function($item, callback) {
+      var self = this;
+      var $sub = $item.children('.site-menu-sub');
+
+      $sub.show().slideUp(this.speed, function() {
+        $(this).css('display', '');
+
+        $(this).find('> .site-menu-item').removeClass('is-shown');
+
+        if (callback) {
+          callback();
+        }
+
+        self.$instance.trigger('collapsed.site.menu');
+      });
+    },
+
+    expand: function($item, callback) {
+      var self = this;
+      var $sub = $item.children('.site-menu-sub');
+      var $children = $sub.children('.site-menu-item').addClass('is-hidden');
+
+      $sub.hide().slideDown(this.speed, function() {
+        $(this).css('display', '');
+
+        if (callback) {
+          callback();
+        }
+
+        self.$instance.trigger('expanded.site.menu');
+      });
+
+      setTimeout(function() {
+        $children.addClass('is-shown');
+        $children.removeClass('is-hidden');
+      }, 0);
+    },
+
+    refresh: function() {
+      this.$instance.find('.open').removeClass('open');
+    },
+
+    position: function($item, $dropdown) {
+      var offsetTop = $item.position().top,
+        dropdownHeight = $dropdown.outerHeight(),
+        menubarHeight = $('.site-menubar').outerHeight();
+
+      if ((offsetTop + dropdownHeight > menubarHeight) && (offsetTop > menubarHeight / 2)) {
+        $dropdown.addClass('site-menu-sub-up');
+      } else {
+        $dropdown.removeClass('site-menu-sub-up');
+      }
+    }
+  };
+})(window, document, jQuery);

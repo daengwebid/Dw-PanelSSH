@@ -1,0 +1,45 @@
+.page-locked {
+  position: relative;
+  color: #ffffff;
+}
+.page-locked:before {
+  position: fixed;
+  top: 0;
+  left: 0;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background-image: url("../../example-images/lockscreen.jpg");
+  background-position-y: top;
+  -webkit-background-size: cover;
+          background-size: cover;
+  z-index: -1;
+}
+.page-locked:after {
+  position: fixed;
+  top: 0;
+  left: 0;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background-color: rgba(38, 50, 56, 0.85);
+  z-index: -1;
+}
+.page-locked .avatar {
+  margin-bottom: 15px;
+}
+.page-locked .locked-user {
+  margin-bottom: 35px;
+}
+.page-locked form {
+  width: 310px;
+  margin: 0 auto 35px;
+}
+.page-locked .page-copyright {
+  color: #ffffff;
+}
+.page-locked .page-copyright .social .icon,
+.page-locked .page-copyright .social .icon:hover,
+.page-locked .page-copyright .social .icon:active {
+  color: #ffffff;
+}
